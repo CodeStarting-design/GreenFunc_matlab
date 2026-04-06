@@ -86,17 +86,17 @@ function G_A_xx = calculate_GAxx_DCIM2(valid_poles, rho, h, er, freq)
     % 步骤 5: 利用索末菲恒等式计算空间域积分
     % =====================================================
     
-    % 1. 动态尾项空域积分 (注意索末菲恒等式带来的 2.0 系数)
+    % 1. 动态尾项空域积分 (索末菲恒等式系数: -2i)
     I_DCIM = 0;
     for i = 1:length(a_DCIM)
         Rc = sqrt(rho^2 - alpha_DCIM(i)^2); 
-        I_DCIM = I_DCIM + 2.0 * a_DCIM(i) * (exp(-1j * k0 * Rc) / Rc);
+        I_DCIM = I_DCIM + (-2i) * a_DCIM(i) * (exp(-1j * k0 * Rc) / Rc);
     end
 
     % 2. 准静态项空域积分
     R0 = rho;
     R1 = sqrt(rho.^2 + (2*h).^2);
-    I_qs = 2.0 * (exp(-1j * k0 * R0) / R0 - exp(-1j * k0 * R1) / R1);
+    I_qs = (-2i) * (exp(-1j * k0 * R0) / R0 - exp(-1j * k0 * R1) / R1);
 
     % =====================================================
     % 步骤 6: 汇总最终结果
