@@ -116,7 +116,7 @@ function G_A_xx = calculate_GAxx_DCIM2(valid_poles, rho, h, er, freq)
     % 步骤 6: 汇总最终结果
     % =====================================================
     I_total = I_DCIM + I_qs - 2i * pi * Sum_R;
-    G_A_xx = D * I_total / mu_0;
+    G_A_xx = D * I_total;
 
 end
 
