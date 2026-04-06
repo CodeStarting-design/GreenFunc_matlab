@@ -17,19 +17,31 @@ function G_A_xx = calculate_GAxx_DCIM2(valid_poles, rho, h, er, freq)
     % 步骤 1: 绝对精确的数值留数提取 (彻底抛弃解析求导的风险)
     % =====================================================
     Sum_R = 0;
-    Res_G = zeros(length(valid_poles), 1); % get_G_total 的留数
-    delta_frac = 1e-6;
+    Res_G = zeros(length(valid_poles), 1); % get_G_total 的数值留数
     
     for p = 1:length(valid_poles)
         kp = valid_poles(p);
         
         % 数值留数: Res_G = lim_{k->kp} (k - kp) * get_G_total(k)
-        delta_k = delta_frac * kp;
+        delta_k = 1e-6 * kp;
         Gp = get_G_total(kp + delta_k, k0, k1, h);
         Res_G(p) = delta_k * Gp;
         
+        % 同时计算解析留数做对比
+        u_p = h * sqrt(k1^2 - kp^2);
+        if abs(u_p) > 1e-10
+            v_p = -u_p * cot(u_p);
+            P_kp = 1i * 2 * sin(u_p) * kp * h;
+            dQ_dk = (-kp * h^2 / u_p) * (cos(u_p) - u_p*sin(u_p) - (u_p/v_p)*sin(u_p) + v_p*cos(u_p));
+            Res_i_analytic = P_kp / dQ_dk;
+            fprintf('  pole kp/k0=%.4f: Res_G=%.4e%+.4ej, kp*Res_G=%.4e%+.4ej, Res_i=%.4e%+.4ej, ratio=%.4f%+.4fj\n', ...
+                real(kp/k0), real(Res_G(p)), imag(Res_G(p)), ...
+                real(kp*Res_G(p)), imag(kp*Res_G(p)), ...
+                real(Res_i_analytic), imag(Res_i_analytic), ...
+                real(Res_i_analytic/(kp*Res_G(p))), imag(Res_i_analytic/(kp*Res_G(p))));
+        end
+        
         % 空间域极点贡献: F(kp)的留数 = kp * Res_G
-        % 围道积分: -2*pi*i * Res[F * H0^(2)] = -2*pi*i * kp * Res_G * H0^(2)
         Res_p = kp * Res_G(p) * besselh(0, 2, kp * rho);
         Sum_R = Sum_R + Res_p;
     end
