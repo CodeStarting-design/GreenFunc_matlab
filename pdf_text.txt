@@ -1,0 +1,567 @@
+www.scichina.com
+info.scichina.com
+www.springerlink.com
+Accurate evaluation of Green’s functions
+in a layered medium by SDP-FLAM
+SONG Zhe†, ZHOU HouXing, HU Jun & HONG Wei
+State Key Lab of Millimeter Waves, School of Information Technology and Engineering, Southeast University, Nanjing 210096, China
+Based on local Taylor expansions on the complex plane, a method for fast locating all modes (FLAM) of
+spectral-domain Green’s Functions in a planar layered medium is developed in this paper. SDP-FLAM,a combination of FLAM with the steepest descent path algorithm (SDP), is employed to accurately eval-uate the spatial-domain Green’s functions in a layered medium. According to the theory of complexanalysis, the relationship among the poles, branch points and Riemann sheets is also analyzed rigor-
+ously. To inverse the Green’s functions from spectral to spatial domain, SDP-FLAM method and discretecomplex image method (DCIM) are applied to the non-near ﬁeld region and the near ﬁled region, respec-
+tively. The signi ﬁcant advantage of SDP-FLAM lies in its capability of calculating Green’s functions in
+a layered medium of moderate thickness with loss or without loss. Some numerical examples are pre-sented to validate SDP-FLAM method.
+Green’s functions, layered medium, fast all modes method, surface wave poles, leaky wave poles, branch cut, Riemann sheet
+With the development in microwave and millime-
+ter wave integrated circuit design and VLSI tech-nology, multi-functionality, high-performance and
+sub-miniaturization will be the advancing trends in
+the near future. Meanwhile, with the progress inmicrowave monolithic integrated circuit (MMIC)and low temperature co-ﬁred ceramic (LTCC)techniques and with the popularity in the concep-
+t i o n so fs y s t e mo nc h i p( S o C )a n ds y s t e mi np a c k -
+age (SiP), more and more attention has been paidto the rigorous, accurate and fast modeling andsimulation method of layered circuits.
+The spatial-domain Green’s functions in a lay-
+ered medium are vital parts in full wave analy-ses of complicated microstrip structures using themethod of moment (MoM). Based on the geom-etry features of a layered medium, the spectral-
+domain Green’s functions can be expressed in
+closed forms, and hence can be inversed to spatialdomain through the well-known Sommerfeld inte-grals (SI)
+[1], whose integrands are Bessel/Hankel
+functions. Both pole point and branch point singu-
+larities of the spectral-domain Green’s functions as
+well as the high oscillation of Bessel/Hankel func-tions result in slow attenuation and strong oscilla-tion of the Sommerfeld integrals on their paths sothat the direct calculations of the Sommerfeld inte-
+grals are quite time-consuming, which is a bottle-
+Received Februar y 26, 2008; a ccepted May 14, 2008; published online March 25, 2009
+doi: 10.1007/s11432-009-0021-0
+†Corresponding author (email: zhesong@emﬁeld.org)
+Supported by the National Natural Science Foundation of China ( Grant No. 60621002), and the State Key Development Program for Basic
+Research of China (Grant No. 2009CB320200)
+Citation: Song Z, Zhou H X, Hu J, et al. Accurate evaluation of Green’s functions in a layered medium by SDP-FLAM. Sci China Ser F-Inf
+Sci, 2009, 52(5): 867–875, doi: 10.1007/s11432-009-0021-0
+neck in modeling and analyzing the planar layered
+medium structures based on the method of mo-ment.
+The steepest descent path (SDP)
+[2,3]method
+is the foremost fast algorithm for calculating the
+Sommerfeld integrals. The main idea of SDP is
+to select such a deformed integral path on com-plex plane that the convergence of the integrationcan be accelerated. However, because of the re-striction in a numerical computer, accurate calcu-
+lation of complex variable Bessel/Hankel functions
+is still diﬃcult. In 1984, Lindell
+[4]suggested the
+accurate complex image method. During 1988 and1991, Fang et al.
+[5,6]proposed the discrete com-
+plex image method (DCIM), which laid the founda-
+tion for semi-numerical and semi-analytical meth-
+ods for inversing the spectral-domain Green func-tions to spatial domain. DCIM
+[7,8]decomposes
+the spectral-domain Green’s functions into threeparts, namely quasi-static term, surface wave term,
+and complex image term, among which the last is
+obtained with the function ﬁtting technique. In1995, Sakar, et al.
+[9]used the generalized pencil of
+function (GPOF) to do ﬁtting in the complex im-age part, which is more robust and reliable than
+the previous Prony
+[5]method. In 1996, Aksun et
+al.[10,11]developed the original DCIM into the two-
+level version, which can enhance the accuracy and
+adaptability simultaneously without pole extrac-tions. In 1997, Michalsky and Mosig
+[12]systemati-
+cally derived the integral equation formulations ofGreen’s functions in a multilayered medium andalso provided the mixed-potential integral equa-tion (MPIE). In 1999, Cui and Chew
+[13]obtained
+the further acceleration of SDP method based on
+the symmetrical characteristic of the Green’s func-
+tions. From 2000 up to now, the use of DCIMto evaluate the spatial-domain Green’s functionsin MPIE becomes more and more popular for fullwave analysis of multilayered medium structures
+based on MoM. In this aspect, Ling and Jin et
+al.
+[14−17],L ia n dL i ue ta l .[18−20], Boix, Medina and
+Horno et al.[21], Simsek and Liu et al.[22,23]made
+their contributions. However, most researches
+have been focusing on thin layer structures. Be-
+side the works mentioned above, there are alsosome methods from diﬀerent points of view. In1998, Hsieh and Kuo
+[24]introduced the fast Han-
+kel transform (FHT) method into this area. In1999, Song and Hong et al.
+[25]used the Chebyshev
+pseudo spectrum expansion combined with Krylov
+subspace order-reduction techniques to calculate
+spatial-domain Green’s functions. In 2006, Kourk-oulos and Cangellaris
+[26]proposed an accurate ap-
+proximation of spectral domain Green’s functionsas a set of spherical and cylindrical waves based on
+vector ﬁtting (VECTFIT). Meanwhile, many re-
+searchers, including King and Sandler et al.
+[27,28],
+Zhang et al.[29],L ie ta l .[30]d i dal o to fw o r ki nt h i s
+area. The signiﬁcant advantage of DCIM is that itcan get the spatial-domain Green’s functions with-
+out any numerical calculation. However, DCIM is
+not suit for a moderately thick layered medium, es-pecially the far ﬁeld region. Moreover, its precisionin the far ﬁeld region could not be improved even ifthe number of complex images is further increased.
+In 2003, Teo et al.
+[31]presents a method for pole
+extraction. In 2006, Neve and Paknys[32]suggested
+using the Newton-Raphson algorithm to ﬁnd poles.
+Then, in 2007, Tsang, Ong and Wu et al.[33−35]pro-
+posed a fast all modes (FAM) method combined
+with numerical modiﬁed steepest path (NMSP) to
+calculate Sommerfeld integrals. This method coulddeal with layered media with a moderate thickness,and its signiﬁcant advantage is that it can ﬁnd allmodes without any contour integration in a proper
+range with the origin as the center on the com-
+plex plane, namely surface wave modes, leaky wavemodes and improper modes. However, this methodcould not ensure the validity in a large range.
+Figure 1 Model of single layered medium with source (HED)
+and ﬁeld points locate on boundary.
+In this paper, based on local Taylor expansions
+on the complex plane, a method for fast locating
+868 SONG Zhe et al. Sci China Ser F-Inf Sci |May 2009 |vol. 52 |no. 5 |867-875all modes (FLAM) of spectral-domain Green’s
+functions in a planar layered medium is developed.SDP-FLAM, a combination, of FLAM with thesteepest descent path algorithm (SDP), is appliedto the accurate evaluation of the spatial-domain
+Green’s functions in a layered medium. Accord-
+ing to the theory of complex analysis, the rela-tionship among the poles, branch points and Rie-mann sheets is also analyzed rigorously. To inversethe Green’s functions from spectral to spatial do-
+main, SDP-FLAM method and discrete complex
+image method (DCIM) are applied to the non-nearﬁeld region and the near ﬁled region, respectively.The signiﬁcant advantage of SDP-FLAM lies in itsability to calculate Green’s functions in a layered
+medium of moderate thickness with loss or with-
+out loss. Some numerical examples are presentedto validate SDP-FLAM method. The model of allthe numerical examples is illustrated in Figure 1,where Layer 0 is free space and Layer 1 is medium
+withε
+ras the relative permittivity. A PEC bound-
+ary lies under Layer 1. Every layer has a perme-
+ability μ0.The source point is a horizontal electric
+dipole (HED) located at interface between Layer0 and Layer 1, and the ﬁeld point has the same
+height as the source point. Only TE mode is con-
+sidered and the time factor e
+jωtis adopted in this
+paper.
+1 Theory analysis
+1.1 Spectral-domain Green’s function
+a n dS o m m e r f e l di n t e g r a l
+The spectral-domain Green’s function of the model
+depicted in Figure 1 could be obtained from trans-mission line theory
+[12]as follows:
+jωμ0·/tildewideGxx
+A=Vh
+i, (1)
+where ωstands for angular frequency, μ0for per-
+meability of free space, and Vh
+ifor a set of TE type
+transmission lines excited by a unit of shunt cur-
+rent. According to the theory of transmission line
+Green’s function[12],w eh a v e
+/tildewideGA
+xx=1
+jωμ0·Zh
+m
+2·/bracketleftbigg
+e−jkmz|z−z/prime|+Mh
+m·4/summationdisplay
+s=1Bh
+ms·e−jkmzγms/bracketrightbigg
+, (2)
+where Zh
+mand kmzstand for characteristic
+impedance and wave vector in zdirection of the
+source layer, respectively. zandz/primestand for the
+coordinates of source point and ﬁeld point in zdi-
+rection, respectively, while Mh
+m,Bh
+msandγmsare
+coeﬃcients depending on the type (TE) of trans-
+mission line. Hence, the spectral-domain Green’sfunction can be expressed as
+/tildewideG
+A
+xx(kρ)=sin(k1zh)
+k1zcos(k1zh)+jk0zsin(k1zh).(3)
+The spatial-domain Green’s function can be ob-
+tained through Sommerfeld integrals as follows:
+GA
+xx(ρ,z|z/prime)
+=1
+2π/integraldisplay∞
+0/tildewideGAxx(kρ,z|z/prime)J0(kρρ)kρdkρ,(4a)
+GAxx(ρ,z|z/prime)
+=1
+4π/integraldisplay∞
+−∞/tildewideGAxx(kρ,z|z/prime)H(2)
+0(kρρ)kρdkρ.(4b)
+1.2 Accurate location of all poles of
+spectral Green’s function
+It is easily known from formulas (3) and (4) that
+the poles are all contained in the denominator of
+(3), and hence this part can be extracted out forconvenience, i.e.
+f=k
+1zcos(k1zh)+jk0zsin(k1zh)=0.(5)
+Using variable substitution u=k1zhandv=jk0zh
+in (5), one has[35]
+f(u,v)=vsinu+ucosu=0, (6)
+where uandvsatisfy
+u2+v2=(k2
+1−k2
+0)h2=r2. (7)
+Substituting (7) into the square of (6), one can geta quite simple formula
+cos 2u +/parenleftbigg2u
+2
+r2−1/parenrightbigg
+=0, (8)
+which is a transcendental equation. Substitutinga truncated Taylor expansion with truncation in-dexN
+MAXinto (8), one can obtain an approximate
+polynomial equation
+NMAX/summationdisplay
+n=0cos(a+nπ/2)
+n!(t)n+1
+2r2t2
+SONG Zhe et al. Sci China Ser F-Inf Sci |May 2009 |vol. 52 |no. 5 |867-875 869+a
+r2t+/parenleftbigga2
+2r2−1/parenrightbigg
+=0, (9)
+where u=(t+a)/2a n d ais the expansion point
+with regard to 2 u. A root of (9) can be accepted as
+that of (8) as long as the truncation error of (9) is
+small enough. Polynomial equation (9) can be ef-fectively solved by using an available method, suchas the Matlab function “roots”. Through moving
+expansion point a, one can locate all the roots of
+(9) on complex uplane, namely all the poles of
+the spectral-domain Green’s function. The distri-
+bution of all the roots in (9) is now illustrated inFigure 2(a).
+All the poles can be classiﬁed into three dif-
+ferent kinds of modes according to their physical
+senses
+[36,37]:
+1) Surface wave poles (SWP), which correspond
+to surface wave, propagate along the bo undary sur-
+face;
+2) leaky wave poles (LWP), which correspond to
+leaky wave, attenuate in horizontal direction but
+exponentially increase in vertical direction;
+3) remainder poles, which have no corresponding
+physical sense.
+There should be some rules for moving the ex-
+pansion points. To explain it concisely, we maysuppose that the region of interest is only scannedfrom left to right, as shown in Figure 2(b). First,we use a Taylor expansion with expansion point A
+and get a convergent radius l
+A.Then, the next ex-
+pansion point Bis selected such that B/lessorequalslantA+lA.
+After obtaining a convergent radius lB,t h et h i r dexpansion point Cis selected such that C/lessorequalslantB+
+min(lA,lB),and so on. In other words, the mini-
+mum convergent radius obtained before the currentmoving can be selected as an upper bounder of thecurrent moving distance. One can also add the
+vertically moving rules if necessary. The selection
+of truncation index N
+MAXdepends on the moving
+rules of expansion points, but has no eﬀect on theaccuracy of the calculated results of roots. Usually,one can set N
+MAX=8 0o r NMAX= 100, with which
+the absolute error of (9) lies between 10−15and
+10−13. Therefore, the roots calculated by the pro-
+posed method did not have to be further iteratedby using the Newton-Raphson algorithm. Compar-ing with the method in ref. [35], the method in this
+paper can not only save the computing time, but
+also reduce the arithmetic complexity. It is clearlyseen from Figure 2(a) that the distribution of theroots is conjugately symmetric, as can be validatedby substituting uandu∗into (8).
+According to the theory of complex analysis
+[38],
+the number Nzerosof zeros and the number Npoles
+of poles of a meromorphic function f(z)i n s i d ea
+simple closed curve Csatisfy the following rela-
+tionship:
+/contintegraldisplay
+Cf/prime(z)
+f(z)dz=2πj(Nzeros−Npoles),(10)
+where f/prime(z) is the derivative of f(z). Now, based
+on this formula, one can examine the number of
+poles obtained by the proposed method. We select
+a rectangular closed contour A−B−C−D−A
+as shown in Figure 2(a), and calculate the contour
+Figure 2 (a) Distribution of roots in (9) on complex uplane; (b) sketch of moving expansion points.
+870 SONG Zhe et al. Sci China Ser F-Inf Sci |May 2009 |vol. 52 |no. 5 |867-875Table 1 Comparison of number of poles gained by Taylor expansion and contour integral
+Expansion range of uNumber of roots Number of roots
+from Taylor expansion from contour integral
+[−20,20] 23 23
+[−50,50] 63 63
+[−100,100] 127 127
+[−250,250] 319 319
+[−500,500] 635 635
+Figure 3 Locations of SIP, SDP and all TE modes of example
+1o nc o m p l e x θplane.
+Figure 4 Locations of SWP, LWP and branch cut of example
+1o nkρplane.
+integral on it. A comparison between the numbers
+of poles obtained by the two methods is shown in
+Table 1. It can be found from Table 1 that the pro-posed method is applicable in a very wide range.
+After the poles on complex uplane are located,
+they can be mapped onto complex k
+ρplane by
+means of kρ=/radicalbig
+k2
+1−(u/h)2.Since only the SWP
+and LWP are needed in the calculation of the Som-merfeld integral, the remainder poles should beexcluded in advance. According to the relationsk
+ρ=k0sinθandk0z=k0cosθ,the poles on com-
+plexkρplane can be again mapped onto complex
+θplane, on which the steepest descent path can
+be characterized as Re(sin θ) = 1. It can be found
+from Figure 3 that the SWP and LWP distributebetween Sommerfeld integral path (SIP) and steep-
+est descent path (SDP), and Figure 4 depicts the
+distribution of them on complex k
+ρplane.1.3 Topology analysis of the spectral-
+domain Green’s function
+With Hankel function as the integrand kernel, the
+Sommerfeld integral path in (4b) extends from −∞
+to +∞[1]. According to the branch cuts of Hankel
+function and spectral-domain Green’s function aswell as the locations of SWP and LWP, the topol-
+ogy of spectral-domain Green’s function can be
+determined
+[7,39], as shown in Figure 5, in which the
+Riemann sheets were deﬁned by kz=±/radicalBig
+k2
+0−k2
+ρ.
+The deformed SIP rounds all the singularity on
+the ﬁrst Riemann sheet and extends to the inﬁnitealong the real axis. SWP, which belongs to the topRiemann sheet, is located between the maximumand minimum wave number of the model if the
+medium is lossless, and will move into the fourth
+quadrant when the medium is lossy. LWP is loca-
+SONG Zhe et al. Sci China Ser F-Inf Sci |May 2009 |vol. 52 |no. 5 |867-875 871ted on the bottom Riemann sheet. Obviously,
+SWP and LWP lie in diﬀerent Riemann sheets.Hence, Sommerfeld integral can be expressed as asum of three diﬀerent parts: 1) residues of all thesurface wave poles; 2) residues of all the leaky wave
+poles; 3) integral contribution of branch cut, that
+is,
+G
+A=GΓ
+A−j2π·D·/parenleftBiggNSWP/summationdisplay
+iRkρi+NLW P/summationdisplay
+jRkρj/parenrightBigg
+,(11)
+where GΓ
+Astands for the integral contribution with
+path shown in Figure 5. Dis a coeﬃcient depend-
+ing on the media and Rkρstands for the residue.
+NSWPandNLWPstand for the numbers of SWP and
+LWP, respectively. One should pay more attention
+to the calculation of residues, since the complexvariables should be signed according to diﬀerentRiemann sheets.
+Figure 5 Topology of spectral Green’s function on complex kρ
+plane.
+1.4 Accurate evaluation of the spatial-
+domain Green’s function1.4.1 Non-near ﬁeld region: ρ>0.05λ. Firstly,
+the residues in (11) can be calculated by a set of
+formulas below
+[35]:
+Rkρp=H(2)
+0(kρpρ)P(kρp)
+[dQ(kρ)/dkρ]|kρ=kρp,(12a)
+P(kρp)=j 2s i n ( u)·kρp·h, (12b)
+[dQ(kρ)/dkρ]|kρ=kρp=/parenleftbigg
+−kρph2
+u/parenrightbigg
+·/bracketleftBig
+cos(u)−usin(u)−u
+vsin(u)+vcos(u)/bracketrightBig
+.(12c)Based on (6), one can build a one-to-one mappingrelation:
+v=−u·cot(u). (13)
+With relation (13), the residues can be easily calcu-
+lated without selecting signs on diﬀerent sheets. It
+is known from the large argument asymptotic ex-pression of Hankel function that the Hankel func-tion in (12) exponentially attenuates with k
+ρpρ
+growing up. Hence, one can use such an inequality,
+|Im(kρp)ρ|<N,t ow a s ho u tt h el e a k yw a v ep o l e s .
+Secondly, the steps for calculating the integral
+contribution GΓ
+Ain (11) are as follows:
+Step 1. Use the relation kρ=k0−jx2/(2ρ)t o
+transform the integral path on complex kρplane to
+the whole real axis on complex xplane.
+Step 2. Determine the integrands and integral
+paths according to diﬀerent Riemann sheets:
+GΓ
+A=GΓ1A+GΓ2A, (14a)
+GΓ1A=−jμ0
+8π0/integraldisplay
+−∞x
+ρ
+·2kρ
+jkR1
+0z+k1zcot(k1zh)H(2)
+0(kρρ)dx,(14b)
+GΓ2A=−jμ0
+8π+∞/integraldisplay
+0x
+ρ
+·2kρ
+jkR2
+0z+k1zcot(k1zh)H(2)
+0(kρρ)dx,(14c)
+⎧
+⎨
+⎩kR1
+0z=/radicalBig
+k2
+0−k2
+ρ,
+kR2
+0z=−/radicalBig
+k2
+0−k2
+ρ,(14d)
+where D=−jμ0/(8π). By the way, (14) is calcu-
+lated by the adaptive Simpson integral[40].
+1.4.2 Near ﬁeld region: ρ<0.05λ. The Som-
+merfeld integral calculated by SDP-FLAM is in-
+tegral (4b), whose integrand contains Hankel func-tion. The origin is the branch point of Hankel func-
+tion (also a singular point), from which a branch
+cut extends to −∞along the real axis, and SDP-
+FLAM does not involve the integral contribution ofthis branch cut, so SDP-FLAM is not applicable tothe near ﬁeld Green’s function. Here, we calculate
+the near ﬁeld Green’s function by one-level discrete
+complex image method. The details are presentedas follows:
+872 SONG Zhe et al. Sci China Ser F-Inf Sci |May 2009 |vol. 52 |no. 5 |867-875Step 1. Rewrite the spectral-domain Green’s
+function in a simple form[5]:
+/tildewideG=A·F
+2jk0z, (15a)
+where Ais a coeﬃcient depending on media.
+Step 2. Extract the quasi-static term (an asymp-
+totic term)
+FQ−S= lim
+kρ→∞/tildewideG(kρ,z|z/prime). (15b)
+Step 3. Extract the surface wave term
+FSWP=2 jk0z·/summationdisplay
+i2kρi·Resi
+k2
+ρ−k2
+ρi. (15c)
+Step 4. Use GPOF algorithm to ﬁt the rest part:
+F−FQ−S−FSWP=Nc/summationdisplay
+i=1aie−jk0zbi. (15d)
+Step 5. Inverse the three parts to spatial domain
+by Sommerfeld Identities, respectively:
+e−jk0r
+4πr=1
+4π/integraldisplay+∞
+−∞e−jk0z|z|
+j2k0zH(2)
+0(kρρ)kρdkρ.(15e)⎧
+⎪⎪⎪⎪⎪⎪⎨
+⎪⎪⎪⎪⎪⎪⎩G
+xx
+A(ρ)=A
+4π/parenleftbigg
+Fst·e−jk0ρ
+ρ−2πj/summationdisplay
+iResi
+·H(2)
+0(kρiρ)kρi+Nc/summationdisplay
+i=1aie−jk0ri
+ri/parenrightbigg
+,(15f)
+r2
+i=ρ2+b2
+i.
+2 Numerical examples
+To validate the correctness and eﬃciency, we pro-
+vide four numerical examples here correspondingto diﬀerent thicknesses, loss cases and frequen-cies. We used Matlab to do programming and|Im(k
+ρp)ρ|<15 as a rule for washing out the leaky
+wave poles. All the positions of surface wave polesare listed in Table 2. To save page space, all theresults are accuracy cut oﬀ at 10
+−4though they
+can actually reach up to 10−15. The last column in
+Table 2 shows the total CPU time cost for calcu-lation. The spatial-domain Green’s functions areshown in Figures 6—9. It can be clearly seen fromthe obtained data that all the SWP and LWP ofthe model in Figure 1 can be accurately located
+Table 2 Model parameters, locations of SWP and computation time
+No. Frequency (GHz) hε r Positions of SWP( k0) CPU time (s)
+18 1 λ 4 1.4694, 1.7801, 1.9470 1.547
+28 2 λ 4 1.1308, 1.4051, 1.6076, 1.7580, 1.8674, 1.9421, 1.9857 1.438
+38 1 λ 4–0.1j 1.4697–0.0313j, 1.7803–0.0273j, 1.9471–0.0255j 3.438
+41 2 1 λ 4 1.4694, 1.7801, 1.9470 1.578
+Figure 6 Spatial Green’s function in Example 1.
+ Figure 7 Spatial Green’s function in Example 2.
+SONG Zhe et al. Sci China Ser F-Inf Sci |May 2009 |vol. 52 |no. 5 |867-875 873Figure 8 Spatial Green’s function in Example 3.
+Figure 9 Spatial Green’s function in Example 4.
+by the proposed method, and the spatial-domain
+Green’s functions provided by SDP-FLAM com-bined with DCIM agree well with the accurate re-
+sults obtained by the direct integral.The numerical examples indicate that SDP-
+FLAM is specially suit for the non-near ﬁeld
+Green’s function, while DCIM can have high preci-sion for the near ﬁeld Green’s function, and hencethese two methods can supplement each other. Ac-
+cording to refs. [34, 35] and our practices, ρ=
+0.05λcan be chosen as a dividing point for these
+two methods.
+3 Conclusion
+In this paper, based on local Taylor expansions on
+the complex plane, a method for fast locating allmodes (FLAM) of spectral-domain Green’s func-tions in a planar layered medium has been de-veloped. SDP-FLAM, the combination of FLAM
+with SDP, can be used to accurately calculate
+the spatial-domain Green’s functions in a layeredmedium. A prominent advantage of SDP-FLAMover NMSP-FAM
+[35], is its ability of ensuring its
+validity in any large range. The numerical exam-
+ples presented in this paper have validated the cor-
+rectness and eﬀectiveness of SDP-FLAM, and in-dicated that SDP-FLAM is specially suit for thenon-near ﬁeld Green’s function, while DCIM canhave high precision for the near ﬁeld Green’s func-
+tion, and hence these two methods can supplement
+each other very well. In our future work, SDP-FLAM method will be extended to more compli-cated structures and applied to the full wave anal-ysis of microwave and millimeter wave LTCC pas-
+sive integrated circuit.
+1 Sommerfeld A. Propagation of waves in wireless telegraphy.
+Ann Phys, 1909, 28: 665–736
+2 Kong J A. Electromagnetic Wave Theory. New York: Wiley,
+1981
+3 Chew W C. Waves and Fields in Inhomogeneous Media. New
+York: Van Nostrand, 1990
+4 Lindell I V, Alanen E. Exact image theory for the Sommerfeld
+half space problem, Pt. 3: general formulation. IEEE Trans
+Antennas Propag, 1984, 32(10): 1027–1032
+5 Fang D G, Yang J J, Delisle G Y. Discrete image theory for
+horizontal electric dipoles in a multilayered medium. IEE Proc
+H, 1988, 135(5): 297–303
+6 Chow Y L, Yang J J, Fang D G, et al. A closed-form spa-
+tial Green’s function for the thick microstrip substrate. IEEETrans Microwave Theory Tech, 1991, 39: 588–5927 Kipp R A, Chan C H. Complex image method for sources
+in bounded regions of multilayer structures. IEEE Trans Mi-
+crowave Theory Tech, 1994, 42: 860–865
+8 Dural G, Aksun M I. Closed-form Green’s functions for general
+sources and stratiﬁed media. IEEE Trans Microwave TheoryTech, 1995, 43: 1545–1551
+9 Hua Y, Sakar T K. Generalized pencil-of-function method for
+extracting poles of an EM system from its transient response.IEEE Trans Antennas Propagat, 1995, 37: 229–234
+10 Aksun M I. A robust approach for the derivation of closed-
+form Greens functions. IEEE Trans Microwave Theory Tech,
+1996, 44: 651–658
+11 Kinayman N, Aksun M I. Eﬃcient use of closed-form Green’s
+functions for the analysis of planar geometries with verticalconnections. IEEE Trans Microwave Theory Tech, 1997, 45:
+874 SONG Zhe et al. Sci China Ser F-Inf Sci |May 2009 |vol. 52 |no. 5 |867-875593–603
+12 Michalsky K A, Mosig J R. Multilayered media Greens func-
+tions in integral equation formulations. IEEE Trans Micro-
+wave Theory Tech, 1997, 45: 508–519
+13 Cui T J, Chew W C. Fast evaluation of Sommerfeld integrals
+for EM scattering and radiation by three dimension buriedobjects. IEEE Trans Geosci Remote Sens, 1999, 37: 887–900
+14 Ling F. Fast electromagnetic modeling of multilayer microstrip
+antennas and circuits. Ph. D. Thesis in Elect. Eng. Urbana-Champaign: Illinois Univ., 2000
+15 Ling F, Jin J M. Discrete complex image method for Greens
+functions of general multilayer media. IEEE Trans Microw
+Guided Wave Lett, 2000, 10: 400–402
+16 Ling F, Liu J, Jin J M. Eﬃcient electromagnetic modeling of
+three-dimensional multilayer microstrip antennas and circuits.
+IEEE Trans Microwave Theory Tech, 2002, 50: 1628–1635
+17 Ling F, Okhmatovski V, Song B, et al. Systematic extraction
+of static images from layered Media Green’s function for accu-rate DCIM implementation. IEEE Antennas Wireless PropagLett, 2007, 6: 215–218
+18 Liu Y, Li L W, Yeo T S, et al. Application of DCIM to
+MPIE-MoM analysis of 3-D PEC objects in multilayered me-dia. IEEE Trans Antennas Propag, 2002, 50: 157–162
+19 Liu Y, Li L W, Yeo T S, et al. Calculation of spatial-domain
+Green functions for multilayered media using DCIM with au-tomatic handling of surface wave poles. IEE Proc-Microw An-tennas Propag, 2004, 151: 236–240
+20 Liu E X, Li E P, Li L W. Electrical performance simulation of
+inhomogeneous multilayer LTCC structure by hybrid method.In: Electronics Packaging Technology Conference, 2004. 657–
+660
+21 Bernal J, Medina F, Boix R R, et al. Fast full-wave analysis of
+multistrip transmission lines based on MPIE and complex im-age theory. IEEE Trans Microwave Theory Tech, 2000, 48(3):
+445–452
+22 Simsek E, Liu Q H, Wei B. Singularity subtraction for eval-
+uation of Green’s function for multilayer media. IEEE Trans
+Microwave Theory Tech, 2006, 54: 216–225
+23 Simsek E, Liu J G, Liu Q H. A spectral integral method (SIM)
+for layered media. IEEE Trans Antennas Propag, 2006, 54:
+1742–1749
+24 Hsieh R C, Kuo J T. Evaluation of spatial Green’s functions
+for microstrips: fast Hankel transform algorithm and compleximage method. Electr Lett, 1998, 34(11): 1110–1111
+25 Song B, Hong W. Extraction of the surface waves and waveg-
+uide modes of the Green’s function in layered anisotropic di-
+electrics between two ground planes. Radio Sci, 2002, 37(4)26 Kourkoulos V N, Cangellaris A C. Accurate approximation of
+Greens functions in planar stratiﬁed media in terms of a ﬁnite
+sum of spherical and cylindrical waves. IEEE Trans AntennasPropag, 2006, 54(5): 1568–1576
+27 King R W P. The electromagnetic ﬁeld of a horizontal electric
+dipole in the presence of a three-layered region. J Appl Phys,1991, 69: 7985–7995
+28 King R W P, Sandler S S. The electromagnetic ﬁeld of a ver-
+tical electric dipole in the presence of a three-layered region.Radio Sci, 1994, 29: 97–113
+29 Zhang H Q, Pan W Y. Electromagnetic ﬁeld of a vertical elec-
+tric dipole on a perfect conductor coated with a dielectric layer.Radio Sci, 2002, 37: 13-1–13-7
+30 Li K, Lu Y. Electromagnetic ﬁeld generated by a horizontal
+electric dipole near the surface of a planar perfect conductor
+coated with a uniaxial layer. IEEE Trans Antennas Propag,
+2005, 53: 3191–3200
+31 Teo S A, Chew S T, Leong M S. Error analysis of the dis-
+crete complex image method and pole extraction. IEEE TransMicrowave Theory Tech, 2003, 51: 406–413
+32 Neve M J, Paknys R. A technique for approximating the loca-
+tion of surface- and leaky-wave poles for a lossy dielectric slab.IEEE Trans Antennas Propag, 2006, 54(1): 115–120
+33 Tsang L, Ong C J, Wu B. Electromagnetic ﬁelds of Hertzian
+dipoles in thin-layered media. IEEE Antennas WirelessPropag Lett, 2006, 5: 537–540
+34 Tsang L, Wu B. Electromagnetic ﬁelds of Hertzian dipoles in
+layered media of moderate thickness including the eﬀects of allmodes. IEEE Antennas Wireless Propag Lett, 2007, 6: 316–
+319
+35 Wu B, Tsang L, Ong C J. Fast all modes (FAM) method
+combined with NMSP for evaluating spatial domain layered
+medium Green’s functions of moderate thickness. Microw OptTech Lett, 2007, 49(12): 3112–3118
+36 Marin M A, Barkeshli S, Pathak P H. On the location of proper
+and improper surface wave poles for the grounded dielectricslab. IEEE Trans Antennas Propag, 1990, 38: 570–573
+37 Jackson D R, Oliner A A. A leaky-wave analysis of the high-
+gain printed antenna conﬁguration. IEEE Trans AntennaPropag, 1988, 36: 905–910
+38 Lang S. Complex Analysis. 4th ed. New York: Spriger-Verlag,
+1999
+39 Fang D G. Antenna Theory and Microstrip Antennas (in Chi-
+nese). Beijing: Science Press, 2006
+40 Gander W, Gautschi W. Adaptive quadrature-revisited. BIT,
+2000, 40: 84–101
+SONG Zhe et al. Sci China Ser F-Inf Sci |May 2009 |vol. 52 |no. 5 |867-875 875

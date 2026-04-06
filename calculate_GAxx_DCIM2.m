@@ -22,7 +22,7 @@ function G_A_xx = calculate_GAxx_DCIM2(valid_poles, rho, h, er, freq)
         kp = valid_poles(p);
         
         % Res_G = lim_{k->kp} (k-kp) * get_G_total(k)
-        delta_k = 1e-6 * kp;
+        delta_k = 1e-8 * kp;
         Gp = get_G_total(kp + delta_k, k0, k1, h);
         Res_G(p) = delta_k * Gp;
         
@@ -100,8 +100,8 @@ function G_A_xx = calculate_GAxx_DCIM2(valid_poles, rho, h, er, freq)
     % SDP: G = D*(I_gamma - 2*pi*i*Sum_R)
     % DCIM: I_cont 替代 I_gamma, Sum_R 用相同的解析留数
     % =====================================================
-    I_total = I_DCIM + I_qs - 2i * pi * Sum_R;
-    G_A_xx = D * I_total;
+    I_total = I_DCIM + I_qs + 2 * pi * Sum_R;
+    G_A_xx = D * I_total / mu_0;
 
 end
 
