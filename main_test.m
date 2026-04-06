@@ -83,9 +83,9 @@ end
 figure(1)
 % p1=loglog(rho/lambda0,abs(GA_total),'k-','LineWidth', 2);
 % hold on
-p2=loglog(rho/lambda0,abs(G_A),'r--','LineWidth', 2);
+p2=loglog(rho/lambda0,abs(G_A)/mu_0,'r--','LineWidth', 2);
 hold on
-p3=loglog(rho/lambda0,abs(G_A_DCIM),'m--','LineWidth', 2);
+p3=loglog(rho/lambda0,abs(G_A_DCIM)/mu_0,'m--','LineWidth', 2);
 
 % figure(2)
 % p4=loglog(rho/lambda0,abs(Gphi_total)/eps_0,'k-','LineWidth', 2);

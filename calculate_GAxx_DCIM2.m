@@ -17,32 +17,20 @@ function G_A_xx = calculate_GAxx_DCIM2(valid_poles, rho, h, er, freq)
     % 步骤 1: 绝对精确的数值留数提取 (彻底抛弃解析求导的风险)
     % =====================================================
     Sum_R = 0;
-    Res_i = zeros(length(valid_poles), 1);
+    Res_G = zeros(length(valid_poles), 1); % get_G_total 的留数
+    delta_frac = 1e-6;
     
     for p = 1:length(valid_poles)
         kp = valid_poles(p);
-        u_p = h * sqrt(k1^2 - kp^2);
         
-        if abs(u_p) < 1e-10 % 奇异性保护
-            continue;
-        end
+        % 数值留数: Res_G = lim_{k->kp} (k - kp) * get_G_total(k)
+        delta_k = delta_frac * kp;
+        Gp = get_G_total(kp + delta_k, k0, k1, h);
+        Res_G(p) = delta_k * Gp;
         
-        v_p = -u_p * cot(u_p);
-        
-        % 谱域留数项计算
-        P_kp = 1i * 2 * sin(u_p) * kp * h;
-        dQ_dk = (-kp * h^2 / u_p) * (cos(u_p) - u_p*sin(u_p) - (u_p/v_p)*sin(u_p) + v_p*cos(u_p));
-        
-        Res_i(p) = (P_kp / dQ_dk);
-%         kp = valid_poles(p);
-%         
-%         % 留数定义: Res = lim_{k->kp} (k - kp) * G_total(k)
-%         % 使用数值逼近，保证 100% 匹配我们定义的 G_total
-%         Gp = get_G_total(kp + delta, k0, k1, h);
-%         Res_G(p) = delta * Gp; 
-        
-        % 空间域的极点贡献: Integral = -2pi*j * Sum(Res * H02 * kp)
-        Res_p = Res_i(p) * besselh(0, 2, kp * rho);
+        % 空间域极点贡献: F(kp)的留数 = kp * Res_G
+        % 围道积分: -2*pi*i * Res[F * H0^(2)] = -2*pi*i * kp * Res_G * H0^(2)
+        Res_p = kp * Res_G(p) * besselh(0, 2, kp * rho);
         Sum_R = Sum_R + Res_p;
     end
    
@@ -71,7 +59,7 @@ function G_A_xx = calculate_GAxx_DCIM2(valid_poles, rho, h, er, freq)
     for i = 1:length(krho_path)
         diff_poles = krho_path(i).^2 - valid_poles.^2;
         diff_poles(abs(diff_poles) < 1e-25) = 1e-25; 
-        G_swp_path(i) = sum((2 .* Res_i(:)) ./ diff_poles);
+        G_swp_path(i) = sum((2 .* valid_poles .* Res_G) ./ diff_poles);
     end
     
     Ftail = G_tot_path - G_qs_path - G_swp_path;
@@ -88,11 +76,11 @@ function G_A_xx = calculate_GAxx_DCIM2(valid_poles, rho, h, er, freq)
     % =====================================================
     tol_svd = 1e-4; 
     tol_eig = 1e-16; 
-    max_images = 20;
+    max_images = 10;
     
     [a_t, alpha_t] = RunGPOF_Standalone(y_fit, dt, tol_svd, tol_eig, max_images);
     
-    % 映射回 kz0 空间 (恢复严格代数推导的正确符号)
+    % 映射回 kz0 空间
     a_DCIM = a_t .* exp(-T02 .* alpha_t);
     alpha_DCIM = -1j * alpha_t ./ k0;
 
@@ -100,7 +88,7 @@ function G_A_xx = calculate_GAxx_DCIM2(valid_poles, rho, h, er, freq)
     % 步骤 5: 利用索末菲恒等式计算空间域积分
     % =====================================================
     
-    % 1. 动态尾项空域积分 (注意索末菲恒等式带来的 2.0 系数)
+    % 1. 动态尾项空域积分 
     I_DCIM = 0;
     for i = 1:length(a_DCIM)
         Rc = sqrt(rho^2 - alpha_DCIM(i)^2); 
