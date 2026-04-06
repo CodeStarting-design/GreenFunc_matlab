@@ -91,7 +91,7 @@ function G_A_xx = calculate_GAxx_DCIM2(valid_poles, rho, h, er, freq)
     % 1. 动态尾项空域积分 
     I_DCIM = 0;
     for i = 1:length(a_DCIM)
-        Rc = sqrt(rho^2 - alpha_DCIM(i)^2); 
+        Rc = sqrt(rho^2 + alpha_DCIM(i)^2); 
         I_DCIM = I_DCIM + (-2i) * a_DCIM(i) * (exp(-1j * k0 * Rc) / Rc);
     end
 
