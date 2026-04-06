@@ -9,46 +9,31 @@ function G_A_xx = calculate_GAxx_DCIM2(valid_poles, rho, h, er, freq)
     k0 = omega * sqrt(mu_0 * eps_0);
     k1 = omega * sqrt(mu_0 * er * eps_0);
 
-    % 全局系数 D
+    % 全局系数 D = -j*mu0/(8*pi)
     D = -1i * mu_0 / (8 * pi);
     valid_poles = valid_poles(:); 
     
     % =====================================================
-    % 步骤 1: 绝对精确的数值留数提取 (彻底抛弃解析求导的风险)
+    % 步骤 1: 数值留数提取 (对 get_G_total 的留数)
     % =====================================================
     Sum_R = 0;
-    Res_G = zeros(length(valid_poles), 1); % get_G_total 的数值留数
+    Res_G = zeros(length(valid_poles), 1);
     
     for p = 1:length(valid_poles)
         kp = valid_poles(p);
         
-        % 数值留数: Res_G = lim_{k->kp} (k - kp) * get_G_total(k)
+        % Res_G = lim_{k->kp} (k - kp) * get_G_total(k)
         delta_k = 1e-6 * kp;
         Gp = get_G_total(kp + delta_k, k0, k1, h);
         Res_G(p) = delta_k * Gp;
         
-        % 同时计算解析留数做对比
-        u_p = h * sqrt(k1^2 - kp^2);
-        if abs(u_p) > 1e-10
-            v_p = -u_p * cot(u_p);
-            P_kp = 1i * 2 * sin(u_p) * kp * h;
-            dQ_dk = (-kp * h^2 / u_p) * (cos(u_p) - u_p*sin(u_p) - (u_p/v_p)*sin(u_p) + v_p*cos(u_p));
-            Res_i_analytic = P_kp / dQ_dk;
-            fprintf('  pole kp/k0=%.4f: Res_G=%.4e%+.4ej, kp*Res_G=%.4e%+.4ej, Res_i=%.4e%+.4ej, ratio=%.4f%+.4fj\n', ...
-                real(kp/k0), real(Res_G(p)), imag(Res_G(p)), ...
-                real(kp*Res_G(p)), imag(kp*Res_G(p)), ...
-                real(Res_i_analytic), imag(Res_i_analytic), ...
-                real(Res_i_analytic/(kp*Res_G(p))), imag(Res_i_analytic/(kp*Res_G(p))));
-        end
-        
-        % 空间域极点贡献: F(kp)的留数 = kp * Res_G
+        % 空间域极点贡献: Res[F * H0^(2)] = kp * Res_G * H0^(2)
         Res_p = kp * Res_G(p) * besselh(0, 2, kp * rho);
         Sum_R = Sum_R + Res_p;
     end
-   
 
     % =====================================================
-    % 步骤 2: 定义 DCIM 采样路径
+    % 步骤 2: 定义 DCIM 采样路径 (沿 kz0 虚轴)
     % =====================================================
     N_samples = 300;                  
     T02 = 1.2;          
@@ -61,12 +46,12 @@ function G_A_xx = calculate_GAxx_DCIM2(valid_poles, rho, h, er, freq)
     krho_path = abs(real(krho_path)) + 1j * abs(imag(krho_path));
 
     % =====================================================
-    % 步骤 3: 构建谱域尾项 (平滑化)
+    % 步骤 3: 构建谱域尾项 (准静态+极点减除+GPOF拟合)
     % =====================================================
     G_tot_path = get_G_total(krho_path, k0, k1, h);
     G_qs_path = (1 - exp(-2 * 1i * kz0_path * h)) ./ (1i .* kz0_path);
     
-    % 减去匹配的极点
+    % 极点部分分式: get_G_total 的极点展开 = 2*kp*Res_G/(krho^2-kp^2)
     G_swp_path = zeros(size(krho_path));
     for i = 1:length(krho_path)
         diff_poles = krho_path(i).^2 - valid_poles.^2;
@@ -76,7 +61,7 @@ function G_A_xx = calculate_GAxx_DCIM2(valid_poles, rho, h, er, freq)
     
     Ftail = G_tot_path - G_qs_path - G_swp_path;
     
-    % 拟合目标: Ftail * (j*kz0) 
+    % 乘以 j*kz0 使 Ftail 有界，方便 GPOF 拟合
     y_fit = Ftail .* (1j * kz0_path);
     
     if any(isnan(y_fit)) || any(isinf(y_fit))
@@ -92,83 +77,45 @@ function G_A_xx = calculate_GAxx_DCIM2(valid_poles, rho, h, er, freq)
     
     [a_t, alpha_t] = RunGPOF_Standalone(y_fit, dt, tol_svd, tol_eig, max_images);
     
-    % 映射回 kz0 空间
+    % 映射回物理空间: 复数图像深度 z_i = -alpha_t/k0
     a_DCIM = a_t .* exp(-T02 .* alpha_t);
     alpha_DCIM = -1j * alpha_t ./ k0;
 
     % =====================================================
-    % 步骤 5: 利用索末菲恒等式计算空间域积分
+    % 步骤 5: 索末菲恒等式空间域转换
     % =====================================================
+    % 系数 -2i 来源:
+    %   SIP积分: int[a*exp(-jkz0*z)/(jkz0)] * krho * H02 dkrho = -2*a*exp(-jk0R)/R
+    %   乘以 SDP 雅可比 i: I_gamma = i * SIP积分 = -2i * sum
     
-    % --- 诊断: 直接数值积分 Ftail 在 SIP 上的贡献 ---
-    % 对 Ftail * krho * H0^(2) 做数值积分 (梯形法则)
-    % 这绕过 GPOF，直接验证 Ftail 谱域分解的正确性
-    dkrho = diff(krho_path);
-    integrand_tail = Ftail .* krho_path .* besselh(0, 2, krho_path * rho);
-    I_tail_direct = sum(0.5*(integrand_tail(1:end-1)+integrand_tail(2:end)) .* dkrho);
-    
-    % 准静态部分同样直接积分
-    integrand_qs = G_qs_path .* krho_path .* besselh(0, 2, krho_path * rho);
-    I_qs_direct = sum(0.5*(integrand_qs(1:end-1)+integrand_qs(2:end)) .* dkrho);
-    
-    % 极点部分同样直接积分
-    integrand_swp = G_swp_path .* krho_path .* besselh(0, 2, krho_path * rho);
-    I_swp_direct = sum(0.5*(integrand_swp(1:end-1)+integrand_swp(2:end)) .* dkrho);
-    
-    % 连续谱总积分 = tail + qs + swp 在 SIP 上的贡献
-    I_cont_SIP = I_tail_direct + I_qs_direct + I_swp_direct;
-    
-    % I_gamma = i * I_SIP (SDP 雅可比)
-    % 但 DCIM 路径不是 SDP 路径！DCIM 路径是沿虚轴的采样路径。
-    % 尝试两种方式，看哪个匹配 SDP:
-    
-    % 方式A: 直接把 SIP 积分结果视为 I_gamma 的一部分
-    % G = (1/(8*pi)) * [I_cont_SIP + pole_contrib]
-    % 其中 pole_contrib = -2*pi*i * Sum_R
-    G_direct_8pi = (1/(8*pi)) * (I_cont_SIP - 2i*pi*Sum_R);
-    
-    % 方式B: 用 D 系数
-    G_direct_D = D * (I_cont_SIP - 2i*pi*Sum_R);
-    
-    % 方式C: 用 D*i 系数 (SDP 雅可比)
-    G_direct_Di = D * 1i * (I_cont_SIP - 2i*pi*Sum_R);
-    
-    % 打印诊断信息
-    fprintf('rho=%.4e: I_SIP=%.6e%+.6ej, Sum_R=%.6e%+.6ej\n', ...
-        rho, real(I_cont_SIP), imag(I_cont_SIP), real(Sum_R), imag(Sum_R));
-    fprintf('  G_1/(8pi) = %.6e%+.6ej\n', real(G_direct_8pi), imag(G_direct_8pi));
-    fprintf('  G_D       = %.6e%+.6ej\n', real(G_direct_D), imag(G_direct_D));
-    fprintf('  G_D*i     = %.6e%+.6ej\n', real(G_direct_Di), imag(G_direct_Di));
-    
-    % 1. GPOF 空域积分
+    % 1. GPOF 图像项
     I_DCIM = 0;
     for i = 1:length(a_DCIM)
         Rc = sqrt(rho^2 - alpha_DCIM(i)^2); 
         I_DCIM = I_DCIM + (-2i) * a_DCIM(i) * (exp(-1j * k0 * Rc) / Rc);
     end
 
-    % 2. 准静态项空域积分
+    % 2. 准静态项: G_qs = (1-exp(-2jkz0*h))/(jkz0) -> 两个球面波
     R0 = rho;
     R1 = sqrt(rho.^2 + (2*h).^2);
     I_qs = (-2i) * (exp(-1j * k0 * R0) / R0 - exp(-1j * k0 * R1) / R1);
 
     % =====================================================
-    % 步骤 6: 汇总最终结果
+    % 步骤 6: 汇总 (对标 SDP-FLAM: G = D*(I_gamma - 2*pi*i*Sum_R))
     % =====================================================
     I_total = I_DCIM + I_qs - 2i * pi * Sum_R;
     G_A_xx = D * I_total;
-    
-    fprintf('  G_DCIM(GPOF) = %.6e%+.6ej\n', real(G_A_xx), imag(G_A_xx));
 
 end
 
 % =========================================================
-% 谱域函数
+% 谱域函数: get_G_total = 2*K11 = 2*sin(kz1*h)/[kz1*cos(kz1*h)+i*kz0*sin(kz1*h)]
 % =========================================================
 function G = get_G_total(krho, k0, k1, h)
     k0z = sqrt(k0.^2 - krho.^2);
     k1z = sqrt(k1.^2 - krho.^2);
     
+    % 强制辐射/衰减条件 (Im(kz) < 0)
     k0z(imag(k0z) > 0) = real(k0z(imag(k0z) > 0)) - 1j * abs(imag(k0z(imag(k0z) > 0)));
     k1z(imag(k1z) > 0) = real(k1z(imag(k1z) > 0)) - 1j * abs(imag(k1z(imag(k1z) > 0)));
 
@@ -179,7 +126,7 @@ function G = get_G_total(krho, k0, k1, h)
 end
 
 % =========================================================
-% GPOF 独立模块
+% GPOF 独立模块 (广义铅笔函数法)
 % =========================================================
 function [a, alpha] = RunGPOF_Standalone(y, dt, tol_svd, tol_eig, max_num_images)
     y = y(:); 

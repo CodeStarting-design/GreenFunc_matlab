@@ -44,7 +44,7 @@ valid_poles2 = FLAM_TM(rho(1), h, er, f);
 valid_poles=[valid_poles1;valid_poles2];
 G_A = zeros(Nx,1);
 G_A_DCIM = zeros(Nx,1);
-for i=1:min(3, length(rho))
+for i=1:length(rho)
 
 % integrand_GA = @(kr) Integrand_GAxx(kr, rho(i), k0, k1, h);
 % 
