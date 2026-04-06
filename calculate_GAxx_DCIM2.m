@@ -84,21 +84,20 @@ function G_A_xx = calculate_GAxx_DCIM2(valid_poles, rho, h, er, freq)
     % =====================================================
     % 步骤 5: 索末菲恒等式空间域转换
     % =====================================================
-    % 系数 -2i 来源:
-    %   SIP积分: int[a*exp(-jkz0*z)/(jkz0)] * krho * H02 dkrho = -2*a*exp(-jk0R)/R
-    %   乘以 SDP 雅可比 i: I_gamma = i * SIP积分 = -2i * sum
+    % 索末菲恒等式: int[exp(-jkz0*z)/kz0] * krho * H02 dkrho = -2i*exp(-jk0R)/R
+    % 对 a/(jkz0) 形式: 系数 = (-2i)/j = +2, 含 SDP 雅可比 i 后 = +2i
     
     % 1. GPOF 图像项
     I_DCIM = 0;
     for i = 1:length(a_DCIM)
         Rc = sqrt(rho^2 - alpha_DCIM(i)^2); 
-        I_DCIM = I_DCIM + (-2i) * a_DCIM(i) * (exp(-1j * k0 * Rc) / Rc);
+        I_DCIM = I_DCIM + (2i) * a_DCIM(i) * (exp(-1j * k0 * Rc) / Rc);
     end
 
     % 2. 准静态项: G_qs = (1-exp(-2jkz0*h))/(jkz0) -> 两个球面波
     R0 = rho;
     R1 = sqrt(rho.^2 + (2*h).^2);
-    I_qs = (-2i) * (exp(-1j * k0 * R0) / R0 - exp(-1j * k0 * R1) / R1);
+    I_qs = (2i) * (exp(-1j * k0 * R0) / R0 - exp(-1j * k0 * R1) / R1);
 
     % =====================================================
     % 步骤 6: 汇总 (对标 SDP-FLAM: G = D*(I_gamma - 2*pi*i*Sum_R))
