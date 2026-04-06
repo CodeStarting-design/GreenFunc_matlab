@@ -2,7 +2,7 @@
 % 高阶索末菲积分算法: 矩形绕道 + 双指数 Tanh-Sinh 分区外推法
 % 精确计算无损耗分层介质空间域格林函数 GAxx 与 Gphi
 % =========================================================================
-clear; clc;
+% clear; clc;
 
 % --- 1. 物理参数设置 ---
 f = 8e9;                  % 8 GHz
@@ -42,17 +42,19 @@ a_point = 1.2 * real(k1);
 valid_poles1 = FLAM_TE(rho(1), h, er, f);
 valid_poles2 = FLAM_TM(rho(1), h, er, f);
 valid_poles=[valid_poles1;valid_poles2];
+G_A = zeros(Nx,1);
+G_A_DCIM = zeros(Nx,1);
 for i=1:length(rho)
 
-integrand_GA = @(kr) Integrand_GAxx(kr, rho(i), k0, k1, h);
-
-% [0, a] 区间: 复平面矩形绕道 (避开实轴极点)
-GA_near = IntegrateSpectralNearField(integrand_GA, a_point, k1);
-
-% [a, inf) 区间: 贝塞尔零点分区 + Tanh-Sinh + Levin-Sidi 外推
-GA_far  = IntegrateSpectralFarField(integrand_GA, a_point, rho(i));
-
-GA_total(i) = GA_near + GA_far;
+% integrand_GA = @(kr) Integrand_GAxx(kr, rho(i), k0, k1, h);
+% 
+% % [0, a] 区间: 复平面矩形绕道 (避开实轴极点)
+% GA_near = IntegrateSpectralNearField(integrand_GA, a_point, k1);
+% 
+% % [a, inf) 区间: 贝塞尔零点分区 + Tanh-Sinh + Levin-Sidi 外推
+% GA_far  = IntegrateSpectralFarField(integrand_GA, a_point, rho(i));
+% 
+% GA_total(i) = GA_near + GA_far;
 
 G_A(i) = calculate_GAxx_SDP_FLAM(valid_poles1, rho(i), h, er, f);
 
@@ -77,13 +79,13 @@ G_A_DCIM(i) = calculate_GAxx_DCIM2(valid_poles1, rho(i), h, er, f);
 % 
 % G_phi(i) = calculate_Gphi_SDP_FLAM(valid_poles, rho(i), h, er, f);
 end
-G_A = G_A/mu_0;
+
 figure(1)
-p1=loglog(rho/lambda0,abs(GA_total),'k-','LineWidth', 2);
-hold on
+% p1=loglog(rho/lambda0,abs(GA_total),'k-','LineWidth', 2);
+% hold on
 p2=loglog(rho/lambda0,abs(G_A),'r--','LineWidth', 2);
 hold on
-p3=loglog(rho/lambda0,abs(G_A_DCIM)/mu_0,'m--','LineWidth', 2);
+p3=loglog(rho/lambda0,abs(G_A_DCIM),'m--','LineWidth', 2);
 
 % figure(2)
 % p4=loglog(rho/lambda0,abs(Gphi_total)/eps_0,'k-','LineWidth', 2);
