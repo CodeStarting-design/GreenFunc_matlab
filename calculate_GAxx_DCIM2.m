@@ -88,10 +88,50 @@ function G_A_xx = calculate_GAxx_DCIM2(valid_poles, rho, h, er, freq)
     % 步骤 5: 利用索末菲恒等式计算空间域积分
     % =====================================================
     
-    % 1. 动态尾项空域积分 
+    % --- 诊断: 直接数值积分 Ftail 在 SIP 上的贡献 ---
+    % 对 Ftail * krho * H0^(2) 做数值积分 (梯形法则)
+    % 这绕过 GPOF，直接验证 Ftail 谱域分解的正确性
+    dkrho = diff(krho_path);
+    integrand_tail = Ftail .* krho_path .* besselh(0, 2, krho_path * rho);
+    I_tail_direct = sum(0.5*(integrand_tail(1:end-1)+integrand_tail(2:end)) .* dkrho);
+    
+    % 准静态部分同样直接积分
+    integrand_qs = G_qs_path .* krho_path .* besselh(0, 2, krho_path * rho);
+    I_qs_direct = sum(0.5*(integrand_qs(1:end-1)+integrand_qs(2:end)) .* dkrho);
+    
+    % 极点部分同样直接积分
+    integrand_swp = G_swp_path .* krho_path .* besselh(0, 2, krho_path * rho);
+    I_swp_direct = sum(0.5*(integrand_swp(1:end-1)+integrand_swp(2:end)) .* dkrho);
+    
+    % 连续谱总积分 = tail + qs + swp 在 SIP 上的贡献
+    I_cont_SIP = I_tail_direct + I_qs_direct + I_swp_direct;
+    
+    % I_gamma = i * I_SIP (SDP 雅可比)
+    % 但 DCIM 路径不是 SDP 路径！DCIM 路径是沿虚轴的采样路径。
+    % 尝试两种方式，看哪个匹配 SDP:
+    
+    % 方式A: 直接把 SIP 积分结果视为 I_gamma 的一部分
+    % G = (1/(8*pi)) * [I_cont_SIP + pole_contrib]
+    % 其中 pole_contrib = -2*pi*i * Sum_R
+    G_direct_8pi = (1/(8*pi)) * (I_cont_SIP - 2i*pi*Sum_R);
+    
+    % 方式B: 用 D 系数
+    G_direct_D = D * (I_cont_SIP - 2i*pi*Sum_R);
+    
+    % 方式C: 用 D*i 系数 (SDP 雅可比)
+    G_direct_Di = D * 1i * (I_cont_SIP - 2i*pi*Sum_R);
+    
+    % 打印诊断信息
+    fprintf('rho=%.4e: I_SIP=%.6e%+.6ej, Sum_R=%.6e%+.6ej\n', ...
+        rho, real(I_cont_SIP), imag(I_cont_SIP), real(Sum_R), imag(Sum_R));
+    fprintf('  G_1/(8pi) = %.6e%+.6ej\n', real(G_direct_8pi), imag(G_direct_8pi));
+    fprintf('  G_D       = %.6e%+.6ej\n', real(G_direct_D), imag(G_direct_D));
+    fprintf('  G_D*i     = %.6e%+.6ej\n', real(G_direct_Di), imag(G_direct_Di));
+    
+    % 1. GPOF 空域积分
     I_DCIM = 0;
     for i = 1:length(a_DCIM)
-        Rc = sqrt(rho^2 + alpha_DCIM(i)^2); 
+        Rc = sqrt(rho^2 - alpha_DCIM(i)^2); 
         I_DCIM = I_DCIM + (-2i) * a_DCIM(i) * (exp(-1j * k0 * Rc) / Rc);
     end
 
@@ -105,6 +145,8 @@ function G_A_xx = calculate_GAxx_DCIM2(valid_poles, rho, h, er, freq)
     % =====================================================
     I_total = I_DCIM + I_qs - 2i * pi * Sum_R;
     G_A_xx = D * I_total;
+    
+    fprintf('  G_DCIM(GPOF) = %.6e%+.6ej\n', real(G_A_xx), imag(G_A_xx));
 
 end
 
