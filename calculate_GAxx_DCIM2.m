@@ -13,9 +13,7 @@ function G_A_xx = calculate_GAxx_DCIM2(valid_poles, rho, h, er, freq)
     valid_poles = valid_poles(:); 
     
     % =====================================================
-    % 步骤 1: 留数计算
-    %   - 数值留数 Res_G: 用于谱域极点减除 (匹配 get_G_total)
-    %   - 解析留数 Res_i: 用于空间域极点贡献 (匹配 SDP-FLAM)
+    % 步骤 1: 数值留数
     % =====================================================
     Sum_R = 0;
     Res_G = zeros(length(valid_poles), 1);
@@ -23,24 +21,13 @@ function G_A_xx = calculate_GAxx_DCIM2(valid_poles, rho, h, er, freq)
     for p = 1:length(valid_poles)
         kp = valid_poles(p);
         
-        % 数值留数 (get_G_total 的极点)
+        % Res_G = lim_{k->kp} (k-kp) * get_G_total(k)
         delta_k = 1e-6 * kp;
         Gp = get_G_total(kp + delta_k, k0, k1, h);
         Res_G(p) = delta_k * Gp;
         
-        % 解析留数 (与 SDP-FLAM 完全一致的公式)
-        u_p = h * sqrt(k1^2 - kp^2);
-        if abs(u_p) < 1e-10
-            continue;
-        end
-        v_p = -u_p * cot(u_p);
-        P_kp = 1i * 2 * sin(u_p) * kp * h;
-        dQ_dk = (-kp * h^2 / u_p) * (cos(u_p) - u_p*sin(u_p) ...
-                 - (u_p/v_p)*sin(u_p) + v_p*cos(u_p));
-        Res_i = P_kp / dQ_dk;
-        
-        % 空间域极点贡献 (与 SDP-FLAM 第26行完全一致)
-        Res_p = Res_i * besselh(0, 2, kp * rho);
+        % 空间域极点: Res[F*H02] at kp = kp*Res_G*H02
+        Res_p = kp * Res_G(p) * besselh(0, 2, kp * rho);
         Sum_R = Sum_R + Res_p;
     end
 
@@ -92,21 +79,21 @@ function G_A_xx = calculate_GAxx_DCIM2(valid_poles, rho, h, er, freq)
     % =====================================================
     % 步骤 5: 空间域 (索末菲恒等式)
     % =====================================================
-    % 索末菲恒等式: int[exp(-jkz0*z)/kz0]*krho*H02 dkrho = -2i*exp(-jk0R)/R
-    % 对 a/(j*kz0) 形式: 系数 = -2i/j = -2
-    % I_gamma = i * SIP积分 => 含雅可比后系数 = i*(-2) = -2i
+    % 索末菲恒等式 (Chew): int[exp(-jkz0*z)/kz0]*krho*H02 dkrho = +2i*exp(-jk0R)/R
+    % 对 a/(j*kz0) 形式: 系数 = +2i/j = +2
+    % I_gamma = i * SIP积分 => 含雅可比后系数 = i*(+2) = +2i
 
     % GPOF 图像项
     I_DCIM = 0;
     for i = 1:length(a_DCIM)
         Rc = sqrt(rho^2 - alpha_DCIM(i)^2); 
-        I_DCIM = I_DCIM + (-2i) * a_DCIM(i) * (exp(-1j * k0 * Rc) / Rc);
+        I_DCIM = I_DCIM + (2i) * a_DCIM(i) * (exp(-1j * k0 * Rc) / Rc);
     end
 
     % 准静态项
     R0 = rho;
     R1 = sqrt(rho.^2 + (2*h).^2);
-    I_qs = (-2i) * (exp(-1j * k0 * R0) / R0 - exp(-1j * k0 * R1) / R1);
+    I_qs = (2i) * (exp(-1j * k0 * R0) / R0 - exp(-1j * k0 * R1) / R1);
 
     % =====================================================
     % 步骤 6: 汇总 (与 SDP-FLAM 对标)
